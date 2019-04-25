@@ -1,154 +1,116 @@
 
-# Module 4 Final Project
+# Project - Art Images
 
+The original text can be found at my [blog](https://stephanosterburg.github.io/stephanosterburg.github.io/deep_learning_art_images/)
 
 ## Introduction
 
-In this lesson, we'll review all of the guidelines and specifications for the final project for Module 4. 
 
-## Objectives
-You will be able to:
-* Describe all required aspects of the final project for Module 4
-* Describe all required deliverables
-* Describe what constitutes a successful project
-* Describe what the experience of the project review should be like
+At [kaggle](https://www.kaggle.com) we can find a dataset containing a collection of art images of google images, yandex images and from [The Virtual Russian Museum](http://rusmuseumvrm.ru/collections/?lang=en). The dataset has about 9000 images with five categories:
+1. Drawings and Watercolors
+2. Paintings
+3. Sculpture
+4. Graphic Art
+5. Iconography (old Russian art)
 
-## Final Project Summary
+Because it is a classification problem, I wanted to use my newly learned knowledge in deep learning and convolutional neural networks (CNN). However, first things first, the downloaded zip file has two more zip files, which it turns out are somewhat similar in context but not quiet. So I decided to combine the two into one dataset.
 
-You've made it all the way through one of the toughest modules of this course, and demonstrated a solid understanding of the principles of Deep Learning. You must have an amazing brain in your head!
+## Approach
 
-<img src='brain.gif' height=40% width=40%>
+When I started to research how to tackle the issue for image classification, I found three possible options:
+* `train_test_split`, we have to create the train and test data ourselves.
+* `flow_from_dataframe`, we need to create first the dataframe ourselves.
+* `flow_from_dictonary`, here we don't need to do any extra work.
 
-For this module's final project, you'll put everything you've learned together to build a Deep Neural Network that trains on a large dataset for classification on a non-trivial task! This project will include:
+I, as you may guessed it already, opted for the later.
 
-* Selecting a problem 
-* Sourcing an appropriate dataset
-* Setting up your project (directory structure, etc)
-* Building, training, tuning, and evaluating a Deep Neural Network
-* Explaining your methodology and findings in a clear, concise manner
+## How deep is too deep?
 
-Let's get started by examining the dataset requirements for this project.
+To answer that question, here we need to know one fact first. I am working on a MacBook Pro (2015) with a 2.2 GHz Intel Core i7 processor and 16GB of RAM.
 
-## The Dataset
+So, how deep is too deep? How many layers can I run on my computer without feeling the pain? To find out I approached it very gingerly, step by step. Or shall I say layer by layer?
 
-For this module's project, the dataset will be heavily tied to the problem you are trying to solve. We recommend that you base your project around one of the three following subdomains in Deep Learning which you how have experience with:
+For the first try, I had only a few layers, which helped with the computation time. However, the result showed a test accuracy of less than 50%.
 
-* Traditional  analytics (classification or regression tasks)
-* Computer Vision
-* Text Classification/NLP
+```python
+model = models.Sequential([
+	Conv2D(32, (3, 3), activation='relu', input_shape=(150, 150, 3)),
+	MaxPooling2D((2, 2)),
 
-### Picking a Reasonable Problem
+	Conv2D(64, (3, 3), activation='relu'),
+	MaxPooling2D((2, 2)),
 
-Note that in respect to this project, all datasets and problems are not created equal--while you could likely build a working model for just about any dataset you find in theory, in practice, you'll find that many datasets have dimensionality issues that make them intractable for training without spending hundreds or even thousands of dollars training your model on a professional server cluster filled with high-end GPUs. 
+	Flatten(),
+	Dense(64, activation='relu'),
+	Dense(128, activation='relu'),
+	Dense(5, activation='sigmoid')
+])
+```
 
-A good litmus test for checking a project's feasibility is to head over to Kaggle or do a quick Google search to see if anyone else has already solved this problem. If they have, then it's likely that you can, too! Just remember, you only have access to a local machine for this project, not a server cluster, so the problem should be one that can be solved on your own laptop!
-
-Here are some caveats you should consider when selecting your dataset:
-
-#### A Note on Computer Vision Datasets
-
-**Try to stay away from color images, or images that are larger than 40x40 pixels**. Convolutional Layers are very expensive, and most models can still make successful classifications on grainy, black-and-white images just fine. Pictures that are too large add a bunch of needless dimensionality to the model--remember, every single pixel in the model is a dimension! Similarly, since color images are Rank-3 Tensors (3-dimensional arrays contain Red, Green, and Blue values for each pixel), they also needlessly triple dimensionality without adding important information to your model in most cases.
-
-#### Aim for a Proof of Concept
-
-With Deep Learning, data is king--the more of it, the better. However, the goal of this project isn't to build the best model possible--it's to demonstrate your understanding by building a model that works. The true goal of this project is to gain experience with Deep Learning and to build a portfolio project you can be proud of, and that doesn't necessarily require a model with incredibly high accuracy.  You should try to avoid datasets and model architectures that won't run in reasonable time on your own machine. For many problems, this means downsampling your dataset and only training on a portion of it. Once you're absolutely sure that you've found the best possible architecture and other hyperparameters for your model, then consider training your model on your entire dataset overnight (or, as larger portion of the dataset that will still run in a feasible amount of time). 
-
-At the end of the day, we want to see your thought process as you iterate and improve on a model. A Project that achieves a lower level of accuracy but has clearly iterated on the model and the problem until it found the best possible approach is more impressive than a model with high accuracy that did not iteration. We're not just interested in seeing you finish a model--we want to see that you understand them, and can use this knowledge to try and make them better and better!
+To improve the test accuracy, I kept adding layers. I ended up adding several more layers, including `Dropout` layers to help to avoid over-fitting.
 
 
-#### Preexisting Datasets
+```python
+model = Sequential([
+    Conv2D(32, (3, 3), input_shape=input_shape, activation='relu'),
+    MaxPooling2D(pool_size=(2, 2)),
+    Dropout(0.2),
 
-As you start exploring datasets that are appropriate for Deep Learning, you'll probably start to see some of the same datasets mentioned again and again, such as CIFAR10. For this project, it is acceptable to use popular preexisting datasets. **It is also acceptable to use datasets that you've found on popular websites such as Kaggle--you'll find a very active Deep Learning community on that website, and plenty of awesome datasets that are perfect for this sort of project!**
+    Conv2D(32, (3, 3), activation='relu'),
+    MaxPooling2D(pool_size=(2, 2)),
+    Dropout(0.2),
 
-#### Sourcing Your Own Dataset
+    Conv2D(64, (3, 3), activation='relu'),
+    MaxPooling2D(pool_size=(2, 2)),
+    Dropout(0.2),
 
- If you so choose, you are also welcome to source your own dataset for this project, although we strongly advise you to think carefully about whether this is worth the time before attempting this! You'll likely need thousands of examples, and scraping google images or other websites can sometimes be more trouble than it's worth. If you feel up to the task, then you are more than welcome to source your own dataset through scraping. However, we strongly encourage you to search the web for preexisting datasets that would work for your chosen task before attempting to source your own, as they likely already exist, and will save you a ton of time debugging your scraping code or getting an API to work. **If you plan on sourcing your own dataset for this project, please clear this with your instuctor first!**
- 
- 
- #### Avoid Generative Models
- 
- After the end of the Deep Learning module, you may be tempted to try building a Generative Model such as a Generative Adversarial Network, Variation Autoencoder, or Sequence Generation model. Although you theoretically know enough to attempt such problems, in practice, these models are much too computationally intensive for you to see any meaningful results on a local machine in the time allotted. For reference, most GANs for image generation need to train for a minimum of 3 days straight on a server cluster with 64 high-end GPUs before showing any meaningful results! The other issue with generative models is that they are unsupervised, so it is impossible to generate any sort of accuracy or performance metrics.  **For this reason, you must stick to supervised learning and only build discriminative models for this project. No generative models will be approved.**
+    Flatten(),
+    Dense(128, activation='relu'),
+    Dropout(0.2),
+    Dense(64, activation='relu'),
+    Dropout(0.2),
+    Dense(5, activation='softmax')
+])
+```
 
-## The Deliverables
+With the simple sequential model the computational time wasn't too bad but with the  model, seen above, the time went up from several minutes per epochs to nearly 30 minutes per epochs.
 
+### epochs/batch_size
 
+An `epochs` is an iteration over the entire provided data; for example, if we have `epochs=25` we iterate 25 times over the data. The `batch_size` is the number of samples that will propagate through the network, by default 32. In our case where we have about 8000 images in the training set, we have 250 batches per epochs.
 
-## The Process
+The question is, do we decrease the batch_size to 16 or increase the number to 64? If we decrease the number, we have 500 batches vs 125 batches if we increase the number. Large batch size result in faster processing time and vice versa. In regards to epochs, the model improves with more but only to a point. They start to plateau in accuracy as they converge.
 
-### 1. Getting Started
+## Pre-Trained Network
 
-Please start by reviewing this document. If you have any questions, please ask them in slack ASAP so (a) we can answer the questions and (b) so we can update this repository to make it clearer.
+To improve not only the accuracy but also the processing time (so I hoped), I decided to use a pre-trained network. There are a few we can choose from, for example [VGG16](https://keras.io/applications/#vgg16), [VGG19](https://keras.io/applications/#vgg19), [InceptionV3](https://keras.io/applications/#inceptionv3), and [ResNet50](https://keras.io/applications/#resnet50) etcetera. I resorted to the [VGG](https://arxiv.org/abs/1409.1556) model to keep it simple for the time being.
 
-Once you're done with the rest of the module, please start on the project. Do that by forking this repository, cloning it locally, and working in the student.ipynb file. Make sure to also add and commit a pdf of your presentation to the repository with a file name of `presentation.pdf`.
+**VGG** is a convolutional neural network model for image recognition proposed by the **Visual Geometry Group in the University of Oxford**, where *VGG16* refers to a VGG model with 16 weight layers, and *VGG19* refers to a VGG model with 19 weight layers.
 
-### 2. The Project Review
+Because we have an already trained model, all we have to do is add at least two more layers (`Flatten` and the output `Dense` layer) to test what the pre-trained network can do with our dataset. In my case I ended up adding six layers in total:
 
-> **When you start on the project, please also reach out to an instructor immediately to schedule your project review** (if you're not sure who to schedule with, please ask in slack!)
+```python
+model = Sequential([
+    vgg_model,
+    Flatten(),
+    Dense(32, activation='relu'),
+    Dense(64, activation='relu'),
+    Dense(128, activation='relu'),
+    Dense(64, activation='relu'),
+    Dense(5, activation='softmax')
+])
+```
 
-#### What to expect from the Project Review
+Now, the accuracy improved to 96.68%, up >5% from my previous model, but not the processing time.
 
-Project reviews are focused on preparing you for technical interviews. Treat project reviews as if they were technical interviews, in both attitude and technical presentation *(sometimes technical interviews will feel arbitrary or unfair - if you want to get the job, commentiing on that is seldom a good choice)*.
+## AWS
 
-The project review is comprised of a 45 minute 1:1 session with one of the instructors. During your project review, be prepared to:
+In the end, it took several hours to run the model. Moreover, it makes it even more painful if you forget to change your default setting on your MacBook and the computer goes into sleep mode, and nothing get processed at all.
 
-#### 1. Deliver your PDF presentation to a non-technical stakeholder. 
-In this phase of the review (~10 mins) your instructor will play the part of a non-technical stakeholder that you are presenting your findings to. The presentation should not exceed 5 minutes, giving the "stakeholder" 5 minutes to ask questions.
+To free up the computer I resorted to - welcome - [paperspace](https://www.paperspace.com).
 
-In the first half of the presentation (2-3 mins), you should summarize your methodology in a way that will be comprehensible to someone with no background in data science and that will increase their confidence in you and your findings. In the second half (the remaining 2-3 mins) you should summarize your findings and be ready to answer a couple of non-technical questions from the audience. The questions might relate to technical topics (sampling bias, confidence, etc) but will be asked in a non-technical way and need to be answered in a way that does not assume a background in statistics or machine learning. You can assume a smart, business stakeholder, with a non-quantitative college degree.
+Which allows me to prototype locally (prove of concept) and compute in the cloud.
 
-#### 2. Go through the Jupyter Notebook, answering questions about how you made certain decisions. Be ready to explain things like:
-    * "how did you pick the question(s) that you did?"
-    * "why are these questions important from a business perspective?"
-    * "how did you decide on the data cleaning options you performed?"
-    * "why did you choose a given method or library?"
-    * "why did you select those visualizations and what did you learn from each of them?"
-    * "why did you pick those features as predictors?"
-    * "how would you interpret the results?"
-    * "how confident are you in the predictive quality of the results?"
-    * "what are some of the things that could cause the results to be wrong?"
+## Conclusion
 
-Think of the second phase of the review (~30 mins) as a technical boss reviewing your work and asking questions about it before green-lighting you to present to the business team. You should practice using the appropriate technical vocabulary to explain yourself. Don't be surprised if the instructor jumps around or sometimes cuts you off - there is a lot of ground to cover, so that may happen.
-
-If any requirements are missing or if significant gaps in understanding are uncovered, be prepared to do one or all of the following:
-* Perform additional data cleanup, visualization, feature selection, modeling and/or model validation
-* Submit an improved version
-* Meet again for another Project Review
-
-What won't happen:
-* You won't be yelled at, belittled, or scolded
-* You won't be put on the spot without support
-* There's nothing you can do to instantly fail or blow it
-
-**Please note: We need to receive the URL of your repository at least 24 hours before your review so we can look at your materials in advance.** 
-
-
-## Requirements
-
-This section outlines the rubric we'll use to evaluate your project.
-
-### 1. Technical Report Must-Haves
-
-Your jupyter notebook should include all code written for this project. This includes any code for sourcing, cleaning, and preprocessing data.  Your technical report should also contain a record of the various different hyperparameters you tried during the tuning process, and the results each achieved. Any data scientist given your technical report should be able to reproduce every step you took during the project from start to finish and achieve the same results, so don't forget to set a random seed for reproducibility!
-
-As always, your jupyter notebook should be well-organized and easy to read, with clean, well-commented code as necessary.
-
-
-### 2. Non-Technical Presentation Must-Haves
-
-Just as with the other projects, you should also complete a 5-10 slide PowerPoint or Google Slides presentation that explains your problem, methodology, and results to non-technical stakeholders. This can be especially hard with Deep Learning--try not to get bogged down with technical jargon! Your slide deck should take ~5 minutes to go through, and should contain graphics and avoid long blocks of text or code when possible. 
-
-**_HINT_**: Keras provides [excellent documentation](https://keras.io/visualization/) on how to create a visualization of your neural network's architecture!
-
-### 3. Blog Post
-
-Please also write a blog post about your experience working on this project. This blog post should provide insight into the problem you are trying to solve and your dataset, any preprocessing steps required, and your approach to building and iteratively tuning your model. It should also contain an explanation of any problems, obstacles, or surprises you encountered during this project. The blog post should be between 800-1500 words and should be targeted at your peers - aspiring data scientists.
-
-
-## Summary
-
-The end of module projects and project reviews are a critical part of the program. They give you a chance to both bring together all the skills you've learned into realistic projects and to practice key "business judgement" and communication skills that you otherwise might not get as much practice with.
-
-The projects are serious and important. They are not graded, but they can be passed and they can be failed. Take the project seriously, put the time in, ask for help from your peers or instructors early and often if you need it, and treat the review as a job interview and you'll do great. We're rooting for you to succeed and we're only going to ask you to take a review again if we believe that you need to. We'll also provide open and honest feedback so you can improve as quickly and efficiently as possible.
-
-We don't expect you to remember all of the terms or to get all of the answers right. If in doubt, be honest. If you don't know something, say so. If you can't remember it, just say so. It's very unusual for someone to complete a project review without being asked a question they're unsure of, we know you might be nervous which may affect your performance. Just be as honest, precise and focused as you can be, and you'll do great!
-
+Use where you can pre-trained networks and if you are using large data use cloud services.
