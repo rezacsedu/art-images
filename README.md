@@ -1,7 +1,7 @@
 
 # Project - Art Images
 
-The original text can be found at my [blog](https://stephanosterburg.github.io/stephanosterburg.github.io/deep_learning_art_images/)
+The original text can be found at my [blog](https://data-ocean.github.io/deep_learning_art_images/)
 
 ## Introduction
 
