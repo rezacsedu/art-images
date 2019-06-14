@@ -1,8 +1,9 @@
 <p align="center">
     <a href="https://www.python.org/dev/peps/"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="Standard - Python Style Guide"></a>
-
-    <center><img src='images/GoogleArt_cropped.png'></center>
 </p>
+
+<center><img src='images/GoogleArt_cropped.png'></center>
+
     
 # Project - Art Images
 
