@@ -1,7 +1,8 @@
+<a href="https://www.python.org/dev/peps/"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="Standard - Python Style Guide"></a>
 
 # Project - Art Images
 
-The original text can be found at my [blog](https://data-ocean.github.io/deep_learning_art_images/)
+The original text can be found at my [blog](https://stephanosterburg.github.io/deep_learning_art_images/)
 
 ## Introduction
 
@@ -114,3 +115,8 @@ Which allows me to prototype locally (prove of concept) and compute in the cloud
 ## Conclusion
 
 Use where you can pre-trained networks and if you are using large data use cloud services.
+
+
+---
+
+License MIT © [Stephan Osterburg](https://stephanosterburg.github.io)
