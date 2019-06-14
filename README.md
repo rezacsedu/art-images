@@ -1,7 +1,9 @@
-<a href="https://www.python.org/dev/peps/"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="Standard - Python Style Guide"></a>
+<p align="center">
+    <a href="https://www.python.org/dev/peps/"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="Standard - Python Style Guide"></a>
 
-<center><img src='images/GoogleArt_cropped.png'></center>
-
+    <center><img src='images/GoogleArt_cropped.png'></center>
+</p>
+    
 # Project - Art Images
 
 At [kaggle](https://www.kaggle.com) we can find a dataset containing a collection of art images of google images, yandex images and from [The Virtual Russian Museum](http://rusmuseumvrm.ru/collections/?lang=en). The dataset has about 9000 images with five categories:
