@@ -4,11 +4,6 @@
 
 # Project - Art Images
 
-The original text can be found at my [blog](https://stephanosterburg.github.io/deep_learning_art_images/)
-
-### Modivation
-
-
 At [kaggle](https://www.kaggle.com) we can find a dataset containing a collection of art images of google images, yandex images and from [The Virtual Russian Museum](http://rusmuseumvrm.ru/collections/?lang=en). The dataset has about 9000 images with five categories:
 1. Drawings and Watercolors
 2. Paintings
@@ -16,10 +11,12 @@ At [kaggle](https://www.kaggle.com) we can find a dataset containing a collectio
 4. Graphic Art
 5. Iconography (old Russian art)
 
-Because it is a classification problem, I wanted to use my newly learned knowledge in deep learning and convolutional neural networks (CNN). However, first things first, the downloaded zip file has two more zip files, which it turns out are somewhat similar in context but not quiet. So I decided to combine the two into one dataset.
+### Modivation
+
+Can we use deep learning and create a convolutional neural networks (CNN) to predict what category a given image is from.
+
 
 ### Code Snippet
-
 
 I ended up adding several more layers, including `Dropout` layers to help to avoid over-fitting.
 
@@ -48,7 +45,6 @@ model = Sequential([
 ```
 
 With the simple sequential model the computational time wasn't too bad but with the given dataset, the time went up from several minutes per epochs to nearly 30 minutes per epochs.
-
 
 ### Cloud Service
 
