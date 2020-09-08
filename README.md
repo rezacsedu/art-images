@@ -19,6 +19,11 @@ At [kaggle](https://www.kaggle.com) we can find a dataset containing a collectio
 Can we use deep learning and create a convolutional neural networks (CNN) to predict what category a given image is from.
 
 
+### Image dataset link: 
+
+https://www.kaggle.com/thedownhill/art-images-drawings-painting-sculpture-engraving
+
+
 ### Code Snippet
 
 I ended up adding several more layers, including `Dropout` layers to help to avoid over-fitting.
